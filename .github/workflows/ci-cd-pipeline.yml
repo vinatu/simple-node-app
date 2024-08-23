@@ -10,54 +10,54 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Run tests
-      run: npm test
+      - name: Run tests
+        run: npm test
 
-    - name: Build Docker image
-      run: |
-        docker build -t vinayak868/simple-node-app:latest .
-        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        docker push vinayak868/simple-node-app:latest
+      - name: Build Docker image
+        run: |
+          docker build -t vinayak868/simple-node-app:latest .
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker push vinayak868/simple-node-app:latest
 
-    - name: Generate SBOM
-      run: |
-        curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
-        syft . -o cyclonedx-json > sbom.json
+      - name: Generate SBOM
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+          syft . -o cyclonedx-json > sbom.json
 
-    - name: Commit SBOM to repo
-      run: |
-        git config --global user.name 'vinatu'
-        git config --global user.email 'l00179000@atu.ie'
-        git add sbom.json
-        git commit -m 'Add SBOM'
+      - name: Commit SBOM to repo
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git config --global user.name 'vinatu'
+          git config --global user.email 'l00179000@atu.ie'
+          git remote set-url origin https://vinatu:${GH_TOKEN}@github.com/vinatu/simple-node-app.git
+          git add sbom.json
+          git commit -m 'Add SBOM'
+          git push
 
-    - name: Push changes
-      env:
-        PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      run: |
-        git remote set-url origin https://vinatu:${PERSONAL_ACCESS_TOKEN}@github.com/vinatu/simple-node-app.git
-        git push origin main
+      - name: Verify Compliance
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+          grype sbom:sbom.json -o json > compliance-report.json
 
-    - name: Verify Compliance
-      run: |
-        curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
-        grype sbom:sbom.json -o json > compliance-report.json
-
-    - name: Commit Compliance Report to repo
-      run: |
-        git config --global user.name 'vinatu'
-        git config --global user.email 'l00179000@atu.ie'
-        git add compliance-report.json
-        git commit -m 'Add Compliance Report'
-        git push
+      - name: Commit Compliance Report to repo
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git config --global user.name 'vinatu'
+          git config --global user.email 'l00179000@atu.ie'
+          git remote set-url origin https://vinatu:${GH_TOKEN}@github.com/vinatu/simple-node-app.git
+          git add compliance-report.json
+          git commit -m 'Add Compliance Report'
+          git push
