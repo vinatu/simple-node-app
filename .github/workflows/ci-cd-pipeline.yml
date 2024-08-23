@@ -41,7 +41,7 @@ jobs:
         run: |
           git config --global user.name 'vinatu'
           git config --global user.email 'l00179000@atu.ie'
-          git remote set-url origin https://vinatu:${GH_TOKEN}@github.com/vinatu/simple-node-app.git
+          git remote set-url origin https://vinatu:${{ secrets.GH_TOKEN }}@github.com/vinatu/simple-node-app.git
           git add sbom.json
           git commit -m 'Add SBOM'
           git push
@@ -57,7 +57,7 @@ jobs:
         run: |
           git config --global user.name 'vinatu'
           git config --global user.email 'l00179000@atu.ie'
-          git remote set-url origin https://vinatu:${GH_TOKEN}@github.com/vinatu/simple-node-app.git
+          git remote set-url origin https://vinatu:${{ secrets.GH_TOKEN }}@github.com/vinatu/simple-node-app.git
           git add compliance-report.json
           git commit -m 'Add Compliance Report'
           git push
