@@ -41,7 +41,13 @@ jobs:
         git config --global user.email 'l00179000@atu.ie'
         git add sbom.json
         git commit -m 'Add SBOM'
-        git push
+
+    - name: Push changes
+      env:
+        PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      run: |
+        git remote set-url origin https://vinatu:${PERSONAL_ACCESS_TOKEN}@github.com/vinatu/simple-node-app.git
+        git push origin main
 
     - name: Verify Compliance
       run: |
