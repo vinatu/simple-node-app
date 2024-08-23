@@ -5,18 +5,12 @@
   "scripts": {
     "test": "jest"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "express": "^4.19.2"
   },
   "devDependencies": {
     "jest": "^29.7.0",
     "supertest": "^6.2.4"
-  },
-  "jest": {
-    "testMatch": ["**/tests/**/*.test.js"]
   }
 }
+
