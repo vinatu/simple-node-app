@@ -94,18 +94,13 @@ jobs:
           curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
           chmod +x /usr/local/bin/argocd
 
-      - name: Expose Local Server using LocalTunnel
-        run: |
-          npm install -g localtunnel
-          lt --port 8080 --subdomain your-custom-subdomain > lt_url.txt &
-          sleep 5
-          export LT_URL=$(cat lt_url.txt | grep -o 'https://[^ ]*')
-          echo "LocalTunnel URL: $LT_URL"
-
-      - name: Deploy to Kubernetes using Argo CD
+      - name: Log in to Argo CD
         env:
           ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
           ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
         run: |
           argocd login $ARGOCD_SERVER --insecure --auth-token $ARGOCD_AUTH_TOKEN
+
+      - name: Sync Argo CD Application
+        run: |
           argocd app sync simple-node-app
