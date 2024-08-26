@@ -93,13 +93,15 @@ jobs:
         run: |
           curl -sSL --http1.1 -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
           chmod +x /usr/local/bin/argocd
-
-      - name: Debug Network Connectivity
+          
+      - name: Port Forward Argo CD Server
         run: |
-          echo "Checking network connectivity to Argo CD server..."
-          echo "ARGOCD_SERVER: localhost:8080"
-          ping -c 4 localhost || true
-          curl -v https://localhost:8080 || true
+          nohup kubectl port-forward svc/argocd-server -n argocd 8080:443 &
+
+      - name: Test Argo CD Server Connectivity
+        run: |
+          echo "Testing connectivity to Argo CD server..."
+          curl -v http://localhost:8080 || true
 
       - name: Log in to Argo CD
         env:
