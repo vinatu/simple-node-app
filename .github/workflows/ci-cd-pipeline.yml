@@ -97,7 +97,7 @@ jobs:
       - name: Debug Network Connectivity
         run: |
           echo "Checking network connectivity to Argo CD server..."
-          echo "ARGOCD_SERVER: https://localhost:8080"
+          echo "ARGOCD_SERVER: localhost:8080"
           ping -c 4 localhost || true
           curl -v https://localhost:8080 || true
 
@@ -106,7 +106,7 @@ jobs:
           ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
         run: |
           echo "Attempting to log in to Argo CD..."
-          argocd login https://localhost:8080 --insecure --auth-token $ARGOCD_AUTH_TOKEN --grpc-web
+          argocd login localhost:8080 --insecure --auth-token $ARGOCD_AUTH_TOKEN --grpc-web
 
       - name: Sync Argo CD Application
         run: |
