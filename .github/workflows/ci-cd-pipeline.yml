@@ -89,6 +89,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install Argo CD CLI
+        run: |
+          curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          chmod +x /usr/local/bin/argocd
+
       - name: Deploy to Kubernetes using Argo CD
         env:
           ARGOCD_SERVER: argocd-server.argocd.svc.cluster.local
