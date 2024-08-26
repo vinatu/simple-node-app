@@ -93,23 +93,16 @@ jobs:
         run: |
           curl -sSL --http1.1 -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
           chmod +x /usr/local/bin/argocd
-          
-      - name: Port Forward Argo CD Server
-        run: |
-          nohup kubectl port-forward svc/argocd-server -n argocd 8080:443 &
 
       - name: Test Argo CD Server Connectivity
         run: |
           echo "Testing connectivity to Argo CD server..."
-          curl -v http://localhost:8080 || true
+          curl -v https://a48e-86-41-92-85.ngrok-free.app || true
 
       - name: Log in to Argo CD
-        env:
-          ARGOCD_USERNAME: ${{ secrets.ARGOCD_USERNAME }}
-          ARGOCD_PASSWORD: ${{ secrets.ARGOCD_PASSWORD }}
         run: |
           echo "Attempting to log in to Argo CD using username and password..."
-          argocd login localhost:8080 --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure --grpc-web
+          argocd login a48e-86-41-92-85.ngrok-free.app --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure --grpc-web
 
       - name: Sync Argo CD Application
         run: |
