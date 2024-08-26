@@ -103,10 +103,11 @@ jobs:
 
       - name: Log in to Argo CD
         env:
-          ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
+          ARGOCD_USERNAME: ${{ secrets.ARGOCD_USERNAME }}
+          ARGOCD_PASSWORD: ${{ secrets.ARGOCD_PASSWORD }}
         run: |
-          echo "Attempting to log in to Argo CD..."
-          argocd login localhost:8080 --insecure --auth-token $ARGOCD_AUTH_TOKEN --grpc-web
+          echo "Attempting to log in to Argo CD using username and password..."
+          argocd login localhost:8080 --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure --grpc-web
 
       - name: Sync Argo CD Application
         run: |
