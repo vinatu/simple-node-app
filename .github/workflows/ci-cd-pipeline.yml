@@ -100,12 +100,27 @@ jobs:
           curl -v https://wild-chefs-appear.loca.lt || true
 
       - name: Log in to Argo CD
+        env:
+          ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
+          ARGOCD_USERNAME: ${{ secrets.ARGOCD_USERNAME }}
+          ARGOCD_PASSWORD: ${{ secrets.ARGOCD_PASSWORD }}
         run: |
-          echo "Attempting to log in to Argo CD using username and password..."
-          argocd login cuddly-roses-relate.loca.lt --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure --grpc-web
+          for i in {1..5}; do
+            echo "Attempting to log in to Argo CD (attempt $i)..."
+            if argocd login $ARGOCD_SERVER --insecure --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --grpc-web; then
+              echo "Successfully logged in to Argo CD."
+              break
+            else
+              echo "Login failed, retrying in 10 seconds..."
+              sleep 10
+            fi
+          done
+          if ! argocd account get-user-info; then
+            echo "Failed to log in to Argo CD after multiple attempts."
+            exit 1
+          fi
 
       - name: Sync Argo CD Application
         run: |
           echo "Syncing Argo CD application..."
           argocd app sync simple-node-app
-
