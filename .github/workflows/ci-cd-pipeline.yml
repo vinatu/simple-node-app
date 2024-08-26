@@ -26,9 +26,9 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t vinayak868/simple-node-app:latest .
+          docker build -t your-dockerhub-username/simple-node-app:latest .
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker push vinayak868/simple-node-app:latest
+          docker push your-dockerhub-username/simple-node-app:latest
 
       - name: Generate SBOM
         run: |
@@ -77,9 +77,9 @@ jobs:
       - name: Build and push SBOM controller Docker image
         run: |
           cd sbom-controller
-          docker build -t vinayak868/sbom-controller:latest .
+          docker build -t your-dockerhub-username/sbom-controller:latest .
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker push vinayak868/sbom-controller:latest
+          docker push your-dockerhub-username/sbom-controller:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -88,6 +88,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Install kubectl
+        run: |
+          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+
+      - name: Set up port forwarding
+        run: |
+          kubectl port-forward svc/argocd-server -n argocd 8080:443 &
+          sleep 10
 
       - name: Install Argo CD CLI
         run: |
