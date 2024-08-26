@@ -95,9 +95,12 @@ jobs:
           chmod +x /usr/local/bin/argocd
 
       - name: Debug Network Connectivity
+        env:
+          ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
         run: |
-          ping -c 4 ${{ secrets.ARGOCD_SERVER }}
-          curl -v ${{ secrets.ARGOCD_SERVER }}
+          echo "ARGOCD_SERVER: $ARGOCD_SERVER"
+          ping -c 4 $ARGOCD_SERVER || true
+          curl -v $ARGOCD_SERVER || true
 
       - name: Log in to Argo CD
         env:
