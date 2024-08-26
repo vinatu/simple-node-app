@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: simple-node-app
-        image: your-dockerhub-username/simple-node-app:latest
+        image: vinayak868/simple-node-app:latest
         ports:
         - containerPort: 3000
 ---
