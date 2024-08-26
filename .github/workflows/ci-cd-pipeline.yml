@@ -102,7 +102,7 @@ jobs:
       - name: Log in to Argo CD
         run: |
           echo "Attempting to log in to Argo CD using username and password..."
-          argocd login a48e-86-41-92-85.ngrok-free.app --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure --grpc-web
+          argocd login https://fancy-bugs-ring.loca.lt --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure --grpc-web
 
       - name: Sync Argo CD Application
         run: |
