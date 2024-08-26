@@ -97,12 +97,12 @@ jobs:
       - name: Test Argo CD Server Connectivity
         run: |
           echo "Testing connectivity to Argo CD server..."
-          curl -v https://a48e-86-41-92-85.ngrok-free.app || true
+          curl -v https://wild-chefs-appear.loca.lt || true
 
       - name: Log in to Argo CD
         run: |
           echo "Attempting to log in to Argo CD using username and password..."
-          argocd login https://fancy-bugs-ring.loca.lt --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure --grpc-web
+          argocd login cuddly-roses-relate.loca.lt --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure --grpc-web
 
       - name: Sync Argo CD Application
         run: |
