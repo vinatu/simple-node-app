@@ -96,8 +96,9 @@ jobs:
 
       - name: Deploy to Kubernetes using Argo CD
         env:
-          ARGOCD_SERVER: localhost:8080
+          ARGOCD_SERVER: https://dc5a-86-41-92-85.ngrok-free.app # Replace with your actual Ngrok URL
           ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
         run: |
           argocd login $ARGOCD_SERVER --insecure --auth-token $ARGOCD_AUTH_TOKEN
           argocd app sync simple-node-app
+
