@@ -91,7 +91,7 @@ jobs:
 
       - name: Install Argo CD CLI
         run: |
-          curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          curl -sSL --http1.1 -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
           chmod +x /usr/local/bin/argocd
 
       - name: Debug Network Connectivity
