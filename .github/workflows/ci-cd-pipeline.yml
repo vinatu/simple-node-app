@@ -96,16 +96,20 @@ jobs:
 
       - name: Debug Network Connectivity
         run: |
-          echo "ARGOCD_SERVER: localhost:8081"
+          echo "Checking network connectivity to Argo CD server..."
+          echo "ARGOCD_SERVER: localhost:8080"
           ping -c 4 localhost || true
-          curl -v http://localhost:8081 || true
+          curl -v http://localhost:8080 || true
 
       - name: Log in to Argo CD
         env:
           ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
         run: |
-          argocd login localhost:8081 --insecure --auth-token $ARGOCD_AUTH_TOKEN
+          echo "Attempting to log in to Argo CD..."
+          argocd login localhost:8080 --insecure --auth-token $ARGOCD_AUTH_TOKEN
 
       - name: Sync Argo CD Application
         run: |
+          echo "Syncing Argo CD application..."
           argocd app sync simple-node-app
+
