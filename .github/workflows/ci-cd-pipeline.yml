@@ -96,7 +96,7 @@ jobs:
 
       - name: Deploy to Kubernetes using Argo CD
         env:
-          ARGOCD_SERVER: argocd-server.argocd.svc.cluster.local
+          ARGOCD_SERVER: localhost:8080
           ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
         run: |
           argocd login $ARGOCD_SERVER --insecure --auth-token $ARGOCD_AUTH_TOKEN
