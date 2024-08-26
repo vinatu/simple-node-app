@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sbom-controller
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sbom-controller
+  template:
+    metadata:
+      labels:
+        app: sbom-controller
+    spec:
+      containers:
+        - name: sbom-controller
+          image: vinayak868/sbom-controller:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080

@@ -61,3 +61,22 @@ jobs:
           git add compliance-report.json
           git commit -m 'Add Compliance Report'
           git push
+
+  build-sbom-controller:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.16'
+
+      - name: Build and push SBOM controller Docker image
+        run: |
+          cd sbom-controller
+          docker build -t vinayak868/sbom-controller:latest .
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker push vinayak868/sbom-controller:latest

@@ -1,0 +1,17 @@
+FROM golang:1.16 AS builder
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN go build -o sbom-controller sbom-controller.go
+
+# Download and install syft
+RUN wget https://github.com/anchore/syft/releases/download/v0.30.1/syft_0.30.1_linux_amd64.tar.gz && \
+    tar -xzf syft_0.30.1_linux_amd64.tar.gz && \
+    mv syft /usr/local/bin/syft
+
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=builder /app/sbom-controller .
+COPY --from=builder /usr/local/bin/syft /usr/local/bin/syft
+CMD ["./sbom-controller"]
