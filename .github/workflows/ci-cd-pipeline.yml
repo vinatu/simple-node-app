@@ -95,19 +95,16 @@ jobs:
           chmod +x /usr/local/bin/argocd
 
       - name: Debug Network Connectivity
-        env:
-          ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
         run: |
-          echo "ARGOCD_SERVER: $ARGOCD_SERVER"
-          ping -c 4 $ARGOCD_SERVER || true
-          curl -v $ARGOCD_SERVER || true
+          echo "ARGOCD_SERVER: https://localhost:8081"
+          ping -c 4 localhost || true
+          curl -v https://localhost:8081 || true
 
       - name: Log in to Argo CD
         env:
-          ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
           ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
         run: |
-          argocd login $ARGOCD_SERVER --insecure --auth-token $ARGOCD_AUTH_TOKEN
+          argocd login https://localhost:8081 --insecure --auth-token $ARGOCD_AUTH_TOKEN
 
       - name: Sync Argo CD Application
         run: |
